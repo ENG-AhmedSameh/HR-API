@@ -28,7 +28,7 @@ public class Benefit {
     @Column(name = "Description")
     private String description;
 
-    @OneToMany(mappedBy = "benefit")
-    private Set<EmployeeBenefit> employeeBenefits = new LinkedHashSet<>();
+//    @OneToMany(mappedBy = "benefit")
+//    private Set<EmployeeBenefit> employeeBenefits = new LinkedHashSet<>();
 
 }

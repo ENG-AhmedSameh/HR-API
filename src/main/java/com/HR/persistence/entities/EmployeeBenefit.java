@@ -28,4 +28,14 @@ public class EmployeeBenefit {
     @Column(name = "EnrollmentDate")
     private LocalDate enrollmentDate;
 
+    public EmployeeBenefit(Employee employee, Benefit benefit, LocalDate enrollmentDate) {
+        this.employee = employee;
+        this.benefit = benefit;
+        this.enrollmentDate = enrollmentDate;
+        this.id = new EmployeebenefitId(employee.getId(), benefit.getId());
+    }
+
+    public EmployeeBenefit() {
+
+    }
 }

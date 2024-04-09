@@ -23,6 +23,15 @@ public class EmployeebenefitId implements Serializable {
     @Column(name = "BenefitID", nullable = false)
     private Integer benefitID;
 
+    public EmployeebenefitId(Integer id, Integer id1) {
+        this.employeeID = id;
+        this.benefitID = id1;
+    }
+
+    public EmployeebenefitId() {
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

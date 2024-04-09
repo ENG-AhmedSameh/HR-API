@@ -17,6 +17,6 @@ public class DepartmentDto implements Serializable {
     @Size(max = 255)
     String departmentName;
     EmployeeDto manager;
-    Set<EmployeeDto> employees;
-    Set<TeamDto> teams;
+//    Set<EmployeeDto> employees;
+//    Set<TeamDto> teams;
 }

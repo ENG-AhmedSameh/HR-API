@@ -28,10 +28,10 @@ public class Department {
     @JoinColumn(name = "ManagerID")
     private Employee manager;
 
-    @OneToMany(mappedBy = "departmentID")
+    @OneToMany(mappedBy = "department")
     private Set<Employee> employees = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "departmentID")
+    @OneToMany(mappedBy = "department")
     private Set<Team> teams = new LinkedHashSet<>();
 
 }

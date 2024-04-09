@@ -1,5 +1,6 @@
 package com.HR.persistence.entities;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -16,7 +17,7 @@ import java.util.Set;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "EmployeeID", nullable = false)
+    @Column(name = "EmployeeID")
     private Integer id;
 
     @Size(max = 255)
@@ -34,7 +35,8 @@ public class Employee {
     private Department department;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DirectManager")
+    @JoinColumn(name = "DirectManagerID")
+    @Nullable
     private Employee directManager;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -51,15 +53,30 @@ public class Employee {
     private Set<Department> departments = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "employee")
-    private Set<EmployeeBenefit> employeebenefits = new LinkedHashSet<>();
+    private Set<EmployeeBenefit> employeeBenefits = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "directManager")
-    private Set<Employee> employees = new LinkedHashSet<>();
+    private Set<Employee> managedEmployees = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "teamLeader")
-    private Set<Team> teams = new LinkedHashSet<>();
+    private Set<Team> leadedTeams = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "employee")
     private Set<Vacation> vacations = new LinkedHashSet<>();
+
+    public void addContract(Contract contract) {
+        contracts.add(contract);
+        contract.setEmployee(this);
+    }
+
+    public void removeContract(Contract contract) {
+        contracts.remove(contract);
+        contract.setEmployee(null);
+    }
+
+    public void addEmployeeBenefit(EmployeeBenefit employeeBenefit) {
+        employeeBenefits.add(employeeBenefit);
+        employeeBenefit.setEmployee(this);
+    }
 
 }
