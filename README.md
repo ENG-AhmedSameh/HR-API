@@ -13,11 +13,11 @@ This project provides an API for a HR database. The API is available in two styl
 
 ## REST API Reference
 
-- The REST API provides endpoints for CRUD operation at all the resources in addintion to enpoints for the bussines logic.
+- The REST API provides endpoints for CRUD operation at all the resources in addition to endpoints for the bussines logic.
 
 - CRUD operations on the resources follow this pattern.
 
-#### Get all entites of table paginated
+#### Get all entities of table paginated
 
 ```http
   GET /HR-API/webapi/{resource}?page=1&size=10
