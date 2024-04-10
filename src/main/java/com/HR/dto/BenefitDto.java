@@ -2,6 +2,7 @@ package com.HR.dto;
 
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
 import java.io.Serializable;
 
 /**

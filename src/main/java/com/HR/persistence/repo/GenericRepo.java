@@ -6,11 +6,11 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
-public abstract class RepoImpl<T> {
+public abstract class GenericRepo<T> {
     protected EntityManager entityManager;
     protected Class<T> table;
-    protected RepoImpl(EntityManager entityManager){
-        this.entityManager = entityManager;
+    protected GenericRepo(){
+//        this.entityManager = entityManager;
         Type genericSuperclass = getClass().getGenericSuperclass();
         ParameterizedType parameterizedType = (ParameterizedType) genericSuperclass;
         this.table = (Class<T>) parameterizedType.getActualTypeArguments()[0];
@@ -52,5 +52,10 @@ public abstract class RepoImpl<T> {
     // Passing a JPQL
     public List<Object> findByNamedQuery(String queryName) {
         return entityManager.createQuery(queryName).getResultList();
+    }
+
+    public GenericRepo<T> withEntityManager(EntityManager em) {
+        this.entityManager = em;
+        return (GenericRepo<T>) this;
     }
 }

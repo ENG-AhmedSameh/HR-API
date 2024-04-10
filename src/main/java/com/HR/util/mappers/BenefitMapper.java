@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Set;
 
 @Mapper
-public interface BenefitMapper {
+public interface BenefitMapper extends GenericMapper<BenefitDto, Benefit>{
     BenefitMapper INSTANCE = Mappers.getMapper(BenefitMapper.class);
-    Benefit toEntity(BenefitDto benefitDto);
-    BenefitDto toDto(Benefit benefit);
-    List<BenefitDto> toDtoList(List<Benefit> benefits);
-    List<Benefit> toEntityList(List<BenefitDto> benefitDtos);
-
-    Set<BenefitDto> toDtoSet(Set<Benefit> benefits);
-    Set<Benefit> toEntitySet(Set<BenefitDto> benefitDtos);
+//    Benefit toEntity(BenefitDto benefitDto);
+//    BenefitDto toDto(Benefit benefit);
+//    List<BenefitDto> toDtoList(List<Benefit> benefits);
+//    List<Benefit> toEntityList(List<BenefitDto> benefitDtos);
+//
+//    Set<BenefitDto> toDtoSet(Set<Benefit> benefits);
+//    Set<Benefit> toEntitySet(Set<BenefitDto> benefitDtos);
 }

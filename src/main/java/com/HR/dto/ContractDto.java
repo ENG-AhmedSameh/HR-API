@@ -1,9 +1,8 @@
 package com.HR.dto;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.Value;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -15,13 +14,12 @@ import java.time.LocalDate;
 @Data
 public class ContractDto implements Serializable {
     Integer id;
-    @NotNull
     Integer employeeID;
-    @NotNull
     @Size(max = 255)
     String contractType;
-    @NotNull
+    @JsonbDateFormat("yyyy-MM-dd")
     LocalDate startDate;
+    @JsonbDateFormat("yyyy-MM-dd")
     LocalDate endDate;
     BigDecimal salary;
     Integer hoursPerWeek;

@@ -6,40 +6,48 @@ import com.HR.persistence.entities.Benefit;
 import com.HR.persistence.repo.BenefitRepo;
 import com.HR.util.mappers.BenefitMapper;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
-public class BenefitService {
+public class BenefitService extends GenericResourceService<BenefitDto,Benefit,BenefitRepo>{
 
-    public BenefitDto getBenefit(int id) {
-        return Database.doInTransaction(em->{
-            BenefitRepo benefitRepo = new BenefitRepo(em);
-            Benefit benefit = benefitRepo.findOne(id).orElseThrow(()->
-                    new NoSuchElementException("No Benefit found with id: " + id));
-            return BenefitMapper.INSTANCE.toDto(benefit);
-        });
+    public BenefitService() {
+        super(new BenefitRepo(), BenefitMapper.INSTANCE);
     }
 
-    public BenefitDto createBenefit(BenefitDto benefitDto) {
-        return Database.doInTransaction(em->{
-            BenefitRepo benefitRepo = new BenefitRepo(em);
-            Benefit benefit = BenefitMapper.INSTANCE.toEntity(benefitDto);
-            benefitRepo.create(benefit);
-            return BenefitMapper.INSTANCE.toDto(benefit);
-        });
-    }
 
-    public List<BenefitDto> getAllBenefits(int page, int size) {
-        return Database.doInTransaction(em->{
-            BenefitRepo benefitRepo = new BenefitRepo(em);
-            return BenefitMapper.INSTANCE.toDtoList(benefitRepo.findAllWithPagination(page, size));
-        });
-    }
+//    @Override
+//    public BenefitDto get(int id) {
+//        return Database.doInTransaction(em->{
+//            BenefitRepo benefitRepo = (BenefitRepo) new BenefitRepo().withEntityManager(em);
+//            Benefit benefit = benefitRepo.findOne(id).orElseThrow(()->
+//                    new NoSuchElementException("No Benefit found with id: " + id));
+//            return BenefitMapper.INSTANCE.toDto(benefit);
+//        });
+//    }
+//
+//    @Override
+//    public BenefitDto create(BenefitDto benefitDto) {
+//        return Database.doInTransaction(em->{
+//            BenefitRepo benefitRepo = (BenefitRepo) new BenefitRepo().withEntityManager(em);
+//            Benefit benefit = BenefitMapper.INSTANCE.toEntity(benefitDto);
+//            benefitRepo.create(benefit);
+//            return BenefitMapper.INSTANCE.toDto(benefit);
+//        });
+//    }
+//
+//    @Override
+//    public List<BenefitDto> getAll(int page, int size) {
+//        return Database.doInTransaction(em->{
+//            BenefitRepo benefitRepo = (BenefitRepo) new BenefitRepo().withEntityManager(em);
+//            return BenefitMapper.INSTANCE.toDtoList(benefitRepo.findAllWithPagination(page, size));
+//        });
+//    }
 
-    public BenefitDto updateBenefit(BenefitDto benefit, int id) {
+    @Override
+    public BenefitDto update(BenefitDto benefit, int id) {
         return Database.doInTransaction(em->{
             boolean hasChange = false;
-            BenefitRepo benefitRepo = new BenefitRepo(em);
+            BenefitRepo benefitRepo = (BenefitRepo) new BenefitRepo().withEntityManager(em);
             Benefit benefitEntity = benefitRepo.findOne(id).orElseThrow(()->
                     new NoSuchElementException("No Benefit found with id: " + id));
             if(benefit.getBenefitName() != null && !benefit.getBenefitName().equals(benefitEntity.getBenefitName())){
@@ -58,12 +66,13 @@ public class BenefitService {
         });
     }
 
-    public void deleteBenefit(int id) {
-        Database.doInTransactionWithoutResult(em->{
-            BenefitRepo benefitRepo = new BenefitRepo(em);
-            Benefit benefit = benefitRepo.findOne(id).orElseThrow(()->
-                    new NoSuchElementException("No Benefit found with id: " + id));
-            benefitRepo.delete(benefit);
-        });
-    }
+//    @Override
+//    public void delete(int id) {
+//        Database.doInTransactionWithoutResult(em->{
+//            BenefitRepo benefitRepo = (BenefitRepo) new BenefitRepo().withEntityManager(em);
+//            Benefit benefit = benefitRepo.findOne(id).orElseThrow(()->
+//                    new NoSuchElementException("No Benefit found with id: " + id));
+//            benefitRepo.delete(benefit);
+//        });
+//    }
 }

@@ -1,5 +1,6 @@
 package com.HR.dto;
 
+import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -13,13 +14,11 @@ import java.time.LocalDate;
 @Data
 public class VacationDto implements Serializable {
     Integer id;
-    @NotNull
     Integer employeeID;
-    @NotNull
+    @JsonbDateFormat("yyyy-MM-dd")
     LocalDate startDate;
-    @NotNull
+    @JsonbDateFormat("yyyy-MM-dd")
     LocalDate endDate;
-    @NotNull
     @Size(max = 50)
     String status;
 }

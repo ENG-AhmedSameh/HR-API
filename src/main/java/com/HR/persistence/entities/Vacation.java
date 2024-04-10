@@ -35,5 +35,4 @@ public class Vacation {
     @NotNull
     @Column(name = "Status", nullable = false, length = 50)
     private String status;
-
 }

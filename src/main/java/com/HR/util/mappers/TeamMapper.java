@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 import java.util.Set;
 
 @Mapper
-public interface TeamMapper {
+public interface TeamMapper extends GenericMapper<TeamDto, Team>{
     TeamMapper INSTANCE = Mappers.getMapper(TeamMapper.class);
 
     @Mappings({
@@ -24,6 +24,7 @@ public interface TeamMapper {
             @Mapping(source = "teamLeader.id", target = "teamLeaderID")
     })
     TeamDto toDto(Team team);
-    Set<Team> toEntitySet(Set<TeamDto> teamDtos);
-    Set<TeamDto> toDtoSet(Set<Team> teams);
+
+    //    Set<Team> toEntitySet(Set<TeamDto> teamDtos);
+//    Set<TeamDto> toDtoSet(Set<Team> teams);
 }

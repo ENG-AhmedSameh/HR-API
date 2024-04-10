@@ -9,7 +9,7 @@ import org.mapstruct.factory.Mappers;
 import java.util.Set;
 
 @Mapper
-public interface ContractMapper {
+public interface ContractMapper extends GenericMapper<ContractDto, Contract> {
     ContractMapper INSTANCE = Mappers.getMapper(ContractMapper.class);
 
     @Mapping(source = "employeeID", target = "employee.id")
@@ -17,6 +17,6 @@ public interface ContractMapper {
     @Mapping(source = "employee.id", target = "employeeID")
     ContractDto toDto(Contract contract);
 
-    Set<Contract> toEntitySet(Set<ContractDto> contractDtos);
-    Set<ContractDto> toDtoSet(Set<Contract> contracts);
+//    Set<Contract> toEntitySet(Set<ContractDto> contractDtos);
+//    Set<ContractDto> toDtoSet(Set<Contract> contracts);
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 @Mapper
-public interface EmployeeMapper {
+public interface EmployeeMapper extends GenericMapper<EmployeeDto, Employee>{
     EmployeeMapper INSTANCE = Mappers.getMapper(EmployeeMapper.class);
     @Mappings({
             @Mapping(source = "directManagerID", target = "directManager.id"),
@@ -37,11 +37,11 @@ public interface EmployeeMapper {
             employeeDto.setTeamName(employee.getTeam().getTeamName());
         }
     }
-    List<EmployeeDto> toDtoList(List<Employee> employees);
-    List<Employee> toEntityList(List<EmployeeDto> employeeDtos);
-
-    Set<Employee> toEntitySet(Set<EmployeeDto> employeeDtos);
-    Set<EmployeeDto> toDtoSet(Set<Employee> employees);
+//    List<EmployeeDto> toDtoList(List<Employee> employees);
+//    List<Employee> toEntityList(List<EmployeeDto> employeeDtos);
+//
+//    Set<Employee> toEntitySet(Set<EmployeeDto> employeeDtos);
+//    Set<EmployeeDto> toDtoSet(Set<Employee> employees);
 
     Set<EmployeeBenefitDto> toEmployeeBenefitDtoSet(Set<EmployeeBenefit> employeeBenefits);
     Set<EmployeeBenefit> toEmployeeBenefitSet(Set<EmployeeBenefitDto> employeeBenefitDtos);

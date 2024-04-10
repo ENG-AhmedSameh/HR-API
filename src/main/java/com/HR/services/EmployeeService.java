@@ -8,49 +8,57 @@ import com.HR.persistence.repo.*;
 import com.HR.util.mappers.*;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class EmployeeService {
-    public List<EmployeeDto> getAllEmployees(int page, int size) {
-        return Database.doInTransaction(em->{
-            EmployeeRepo employeeRepo = new EmployeeRepo(em);
-            List<Employee> employees = employeeRepo.findAllWithPagination(page, size);
-            return EmployeeMapper.INSTANCE.toDtoList(employees);
-        });
+public class EmployeeService extends GenericResourceService<EmployeeDto,Employee,EmployeeRepo> {
+
+    public EmployeeService(EmployeeRepo repo, GenericMapper<EmployeeDto, Employee> mapper) {
+        super(repo, mapper);
     }
 
-    public EmployeeDto getEmployee(int id) {
-        return Database.doInTransaction(em->{
-            EmployeeRepo employeeRepo = new EmployeeRepo(em);
-            Employee employee = employeeRepo.findOne(id).orElseThrow(()->new NoSuchElementException("No such employee found with id "+id));
-            return EmployeeMapper.INSTANCE.toDto(employee);
-        });
-    }
+//    @Override
+//    public List<EmployeeDto> getAll(int page, int size) {
+//        return Database.doInTransaction(em->{
+//            EmployeeRepo employeeRepo = new EmployeeRepo(em);
+//            List<Employee> employees = employeeRepo.findAllWithPagination(page, size);
+//            return EmployeeMapper.INSTANCE.toDtoList(employees);
+//        });
+//    }
+//
+//    @Override
+//    public EmployeeDto get(int id) {
+//        return Database.doInTransaction(em->{
+//            EmployeeRepo employeeRepo = new EmployeeRepo(em);
+//            Employee employee = employeeRepo.findOne(id).orElseThrow(()->new NoSuchElementException("No such employee found with id "+id));
+//            return EmployeeMapper.INSTANCE.toDto(employee);
+//        });
+//    }
+//
+//    @Override
+//    public EmployeeDto create(EmployeeDto employee) {
+//        return Database.doInTransaction(em->{
+//            EmployeeRepo employeeRepo = new EmployeeRepo(em);
+//            Employee createdEmployee = EmployeeMapper.INSTANCE.toEntity(employee);
+//            if(createdEmployee.getDirectManager()!=null){
+//                if(createdEmployee.getDirectManager().getId()==null){
+//                    createdEmployee.setDirectManager(null);
+//                }else{
+//                    Employee directManager = employeeRepo.findOne(createdEmployee.getDirectManager().getId()).orElseThrow(()->new NoSuchElementException("No such manager found with id "+employee.getDirectManagerID()));
+//                    createdEmployee.setDirectManager(directManager);
+//                }
+//            }
+//            employeeRepo.create(createdEmployee);
+//            return EmployeeMapper.INSTANCE.toDto(createdEmployee);
+//        });
+//    }
 
-    public EmployeeDto createEmployee(EmployeeDto employee) {
-        return Database.doInTransaction(em->{
-            EmployeeRepo employeeRepo = new EmployeeRepo(em);
-            Employee createdEmployee = EmployeeMapper.INSTANCE.toEntity(employee);
-            if(createdEmployee.getDirectManager()!=null){
-                if(createdEmployee.getDirectManager().getId()==null){
-                    createdEmployee.setDirectManager(null);
-                }else{
-                    Employee directManager = employeeRepo.findOne(createdEmployee.getDirectManager().getId()).orElseThrow(()->new NoSuchElementException("No such manager found with id "+employee.getDirectManagerID()));
-                    createdEmployee.setDirectManager(directManager);
-                }
-            }
-            employeeRepo.create(createdEmployee);
-            return EmployeeMapper.INSTANCE.toDto(createdEmployee);
-        });
-    }
-
-    public EmployeeDto updateEmployee(EmployeeDto employeeDto, int id) {
+    @Override
+    public EmployeeDto update(EmployeeDto employeeDto, int id) {
         return Database.doInTransaction(em->{
             boolean hasChanges = false;
-            EmployeeRepo employeeRepo = new EmployeeRepo(em);
+            EmployeeRepo employeeRepo = (EmployeeRepo) new EmployeeRepo().withEntityManager(em);
             Employee employeeEntity = employeeRepo.findOne(id).orElseThrow(()->
                     new NoSuchElementException("No such employee found with id "+id));
             if(employeeDto.getFirstName()!=null&& !employeeDto.getFirstName().equals(employeeEntity.getFirstName())){
@@ -67,7 +75,7 @@ public class EmployeeService {
                 hasChanges = true;
             }
             if(employeeDto.getTeamID()!=null && !employeeDto.getTeamID().equals(employeeEntity.getTeam().getId())){
-                Team team = new TeamRepo(em).findOne(employeeDto.getTeamID()).orElseThrow(()->new NoSuchElementException("No such team found with id "+employeeDto.getTeamID()));
+                Team team = new TeamRepo().withEntityManager(em).findOne(employeeDto.getTeamID()).orElseThrow(()->new NoSuchElementException("No such team found with id "+employeeDto.getTeamID()));
                 employeeEntity.setTeam(team);
                 hasChanges = true;
             }
@@ -83,17 +91,18 @@ public class EmployeeService {
         });
     }
 
-    public void deleteEmployee(int id) {
-        Database.doInTransactionWithoutResult(em->{
-            EmployeeRepo employeeRepo = new EmployeeRepo(em);
-            Employee employee = employeeRepo.findOne(id).orElseThrow(()->new NoSuchElementException("No such employee found with id "+id));
-            employeeRepo.delete(employee);
-        });
-    }
+//    @Override
+//    public void delete(int id) {
+//        Database.doInTransactionWithoutResult(em->{
+//            EmployeeRepo employeeRepo = new EmployeeRepo(em);
+//            Employee employee = employeeRepo.findOne(id).orElseThrow(()->new NoSuchElementException("No such employee found with id "+id));
+//            employeeRepo.delete(employee);
+//        });
+//    }
 
     public Set<EmployeeDto> getManagedEmployees(int employeeId) {
         return Database.doInTransaction(em -> {
-            EmployeeRepo employeeRepo = new EmployeeRepo(em);
+            EmployeeRepo employeeRepo = (EmployeeRepo) new EmployeeRepo().withEntityManager(em);
             Employee employee = employeeRepo.findOne(employeeId).orElseThrow(() -> new NoSuchElementException("No such employee found with id " + employeeId));
             Set<Employee> managedEmployees = employee.getManagedEmployees();
             return EmployeeMapper.INSTANCE.toDtoSet(managedEmployees);
@@ -102,7 +111,7 @@ public class EmployeeService {
 
     public Set<BenefitDto> getEmployeeBenefits(int employeeId) {
         return Database.doInTransaction(em -> {
-            EmployeeRepo employeeRepo = new EmployeeRepo(em);
+            EmployeeRepo employeeRepo = (EmployeeRepo) new EmployeeRepo().withEntityManager(em);
             Employee employee = employeeRepo.findOne(employeeId).orElseThrow(()->new NoSuchElementException("No such employee found with id "+employeeId));
             Set<Benefit> benefits = employee.getEmployeeBenefits().stream()
                     .map(EmployeeBenefit::getBenefit)
@@ -113,13 +122,13 @@ public class EmployeeService {
 
     public void addEmployeeBenefit(int employeeId, int benefitId) {
         Database.doInTransactionWithoutResult(em -> {
-            EmployeeRepo employeeRepo = new EmployeeRepo(em);
-            BenefitRepo benefitRepo = new BenefitRepo(em);
+            EmployeeRepo employeeRepo = (EmployeeRepo) new EmployeeRepo().withEntityManager(em);
+            BenefitRepo benefitRepo = (BenefitRepo) new BenefitRepo().withEntityManager(em);
             Employee employee = employeeRepo.findOne(employeeId).orElseThrow(() -> new NoSuchElementException("No such employee found with id " + employeeId));
             Benefit benefit = benefitRepo.findOne(benefitId).orElseThrow(() -> new NoSuchElementException("No such benefit found with id " + benefitId));
             EmployeeBenefit employeeBenefit = new EmployeeBenefit(employee,benefit, LocalDate.now());
             employee.addEmployeeBenefit(employeeBenefit);
-            EmployeeBenefitRepo employeeBenefitRepo = new EmployeeBenefitRepo(em);
+            EmployeeBenefitRepo employeeBenefitRepo = (EmployeeBenefitRepo) new EmployeeBenefitRepo().withEntityManager(em);
             employeeBenefitRepo.create(employeeBenefit);
         });
     }
@@ -127,7 +136,7 @@ public class EmployeeService {
     public void removeEmployeeBenefit(int employeeId, int benefitId) {
         Database.doInTransactionWithoutResult(em -> {
             EmployeebenefitId employeebenefitId = new EmployeebenefitId(employeeId, benefitId);
-            EmployeeBenefitRepo employeeBenefitRepo = new EmployeeBenefitRepo(em);
+            EmployeeBenefitRepo employeeBenefitRepo = (EmployeeBenefitRepo) new EmployeeBenefitRepo().withEntityManager(em);
             EmployeeBenefit employeeBenefit = employeeBenefitRepo.find(employeebenefitId).orElseThrow(() -> new NoSuchElementException("No benefit with id "+benefitId+ " found for employee with id " + employeeId));
             employeeBenefitRepo.delete(employeeBenefit);
         });
@@ -135,7 +144,7 @@ public class EmployeeService {
 
     public Set<TeamDto> getLeadedTeams(int employeeId) {
         return Database.doInTransaction(em -> {
-            EmployeeRepo employeeRepo = new EmployeeRepo(em);
+            EmployeeRepo employeeRepo = (EmployeeRepo) new EmployeeRepo().withEntityManager(em);
             Employee employee = employeeRepo.findOne(employeeId).orElseThrow(()->
                     new NoSuchElementException("No such employee found with id "+employeeId));
             Set<Team> leadedTeams = employee.getLeadedTeams();
@@ -145,7 +154,7 @@ public class EmployeeService {
 
     public Set<ContractDto> getContracts(int employeeId) {
         return Database.doInTransaction(em -> {
-            EmployeeRepo employeeRepo = new EmployeeRepo(em);
+            EmployeeRepo employeeRepo = (EmployeeRepo) new EmployeeRepo().withEntityManager(em);
             Employee employee = employeeRepo.findOne(employeeId).orElseThrow(()->
                     new NoSuchElementException("No such employee found with id "+employeeId));
             Set<Contract> contracts = employee.getContracts();
@@ -155,7 +164,7 @@ public class EmployeeService {
 
     public Set<VacationDto> getVacations(int employeeId) {
         return Database.doInTransaction(em -> {
-            EmployeeRepo employeeRepo = new EmployeeRepo(em);
+            EmployeeRepo employeeRepo = (EmployeeRepo) new EmployeeRepo().withEntityManager(em);
             Employee employee = employeeRepo.findOne(employeeId).orElseThrow(()->
                     new NoSuchElementException("No such employee found with id "+employeeId));
             Set<Vacation> vacations = employee.getVacations();
@@ -165,13 +174,13 @@ public class EmployeeService {
 
     public ContractDto getContract(int employeeId, int contractId) {
         return Database.doInTransaction(em -> {
-            EmployeeRepo employeeRepo = new EmployeeRepo(em);
+            EmployeeRepo employeeRepo = (EmployeeRepo) new EmployeeRepo().withEntityManager(em);
             Employee employee = employeeRepo.findOne(employeeId).orElseThrow(()->
                     new NoSuchElementException("No such employee found with id "+employeeId));
 //            Contract contract = employee.getContracts().stream()
 //                    .filter(c -> c.getId() == contractId)
 //                    .findFirst().orElseThrow(() -> new NoSuchElementException("No such contract found with id " + contractId +" for employee with id "+employeeId));
-            ContractRepo contractRepo = new ContractRepo(em);
+            ContractRepo contractRepo = (ContractRepo) new ContractRepo().withEntityManager(em);
             Contract contract = contractRepo.findOne(contractId).orElseThrow(() -> new NoSuchElementException("No such contract found with id " + contractId));
             if(contract.getEmployee().getId()!=employeeId)
                 throw new IllegalArgumentException("Contract with id "+contractId+" does not belong to employee with id "+employeeId);
@@ -181,7 +190,7 @@ public class EmployeeService {
 
     public VacationDto getVacation(int employeeId, int vacationId) {
         return Database.doInTransaction(em -> {
-            EmployeeRepo employeeRepo = new EmployeeRepo(em);
+            EmployeeRepo employeeRepo = (EmployeeRepo) new EmployeeRepo().withEntityManager(em);
             Employee employee = employeeRepo.findOne(employeeId).orElseThrow(()->
                     new NoSuchElementException("No such employee found with id "+employeeId));
             Vacation vacation = employee.getVacations().stream()
