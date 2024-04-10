@@ -6,6 +6,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DepartmentControllerTest {
@@ -63,18 +65,32 @@ public class DepartmentControllerTest {
     @Test
     public void testUpdateDepartment() {
         int departmentId = 1; // Assuming this ID exists and is valid
+
+        // Arrange
+        WebTarget getTarget = client.target(BASE_URL + "/{id}").resolveTemplate("id", departmentId);
+        DepartmentDto originalDepartment = getTarget.request(MediaType.APPLICATION_JSON).get(DepartmentDto.class);
+
+        // Act
         DepartmentDto updatedDepartment = new DepartmentDto();
-        updatedDepartment.setDepartmentName("Innovation and Development");
+        String currentTimeStamp = String.valueOf(LocalDateTime.now());
+        updatedDepartment.setDepartmentName("Innovation and Development: "+ currentTimeStamp);
         updatedDepartment.setManagerID(3); // Assuming a new valid manager ID
 
-        WebTarget target = client.target(BASE_URL + "/{id}").resolveTemplate("id", departmentId);
-        Response response = target.request(MediaType.APPLICATION_JSON)
+        WebTarget updateTarget = client.target(BASE_URL + "/{id}").resolveTemplate("id", departmentId);
+        Response updateResponse = updateTarget.request(MediaType.APPLICATION_JSON)
                 .put(Entity.entity(updatedDepartment, MediaType.APPLICATION_JSON));
 
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        DepartmentDto departmentResponse = response.readEntity(DepartmentDto.class);
+        // Assert
+        assertEquals(Response.Status.OK.getStatusCode(), updateResponse.getStatus());
+        DepartmentDto departmentResponse = updateResponse.readEntity(DepartmentDto.class);
         assertEquals(departmentId, departmentResponse.getId());
-        assertEquals("Innovation and Development", departmentResponse.getDepartmentName());
+        assertEquals("Innovation and Development: "+ currentTimeStamp, departmentResponse.getDepartmentName());
+
+        // Restore the original state
+        Response restoreResponse = updateTarget.request(MediaType.APPLICATION_JSON)
+                .put(Entity.entity(originalDepartment, MediaType.APPLICATION_JSON));
+
+        assertEquals(Response.Status.OK.getStatusCode(), restoreResponse.getStatus(), "Failed to restore the original department state.");
     }
 
     @Test

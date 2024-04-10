@@ -7,6 +7,7 @@ import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,20 +65,34 @@ public class VacationControllerTest {
     @Test
     public void testUpdateVacation() {
         int vacationId = 1; // Assuming this ID exists and is valid
+
+        // Arrange
+        WebTarget getTarget = client.target(BASE_URL + "/{id}").resolveTemplate("id", vacationId);
+        VacationDto originalVacation = getTarget.request(MediaType.APPLICATION_JSON).get(VacationDto.class);
+
+        // Act
         VacationDto updatedVacation = new VacationDto();
         updatedVacation.setEmployeeID(1); // Assuming an existing employee ID
         updatedVacation.setStartDate(LocalDate.now());
         updatedVacation.setEndDate(LocalDate.now().plusDays(10));
-        updatedVacation.setStatus("Updated");
+        String currentTimeStamp = String.valueOf(LocalDateTime.now());
+        updatedVacation.setStatus("Updated"+currentTimeStamp);
 
-        WebTarget target = client.target(BASE_URL + "/{id}").resolveTemplate("id", vacationId);
-        Response response = target.request(MediaType.APPLICATION_JSON)
+        WebTarget updateTarget = client.target(BASE_URL + "/{id}").resolveTemplate("id", vacationId);
+        Response updateResponse = updateTarget.request(MediaType.APPLICATION_JSON)
                 .put(Entity.entity(updatedVacation, MediaType.APPLICATION_JSON));
 
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        VacationDto vacationResponse = response.readEntity(VacationDto.class);
+        // Assert
+        assertEquals(Response.Status.OK.getStatusCode(), updateResponse.getStatus());
+        VacationDto vacationResponse = updateResponse.readEntity(VacationDto.class);
         assertEquals(vacationId, vacationResponse.getId());
-        assertEquals("Updated", vacationResponse.getStatus());
+        assertEquals("Updated"+currentTimeStamp, vacationResponse.getStatus());
+
+        // Restore the original state
+        Response restoreResponse = updateTarget.request(MediaType.APPLICATION_JSON)
+                .put(Entity.entity(originalVacation, MediaType.APPLICATION_JSON));
+
+        assertEquals(Response.Status.OK.getStatusCode(), restoreResponse.getStatus(), "Failed to restore the original vacation state.");
     }
 
     @Test

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -71,6 +72,12 @@ public class ContractControllerTest {
     @Test
     public void testUpdateContract() {
         int contractId = 1; // Assuming this ID exists and is valid
+
+        // Arrange
+        WebTarget getTarget = client.target(BASE_URL + "/{id}").resolveTemplate("id", contractId);
+        ContractDto originalContract = getTarget.request(MediaType.APPLICATION_JSON).get(ContractDto.class);
+
+        // Act
         ContractDto updatedContract = new ContractDto();
         updatedContract.setEmployeeID(1); // Assuming an existing employee ID
         updatedContract.setContractType("Part-Time");
@@ -78,16 +85,24 @@ public class ContractControllerTest {
         updatedContract.setEndDate(LocalDate.of(2025, 12, 31));
         updatedContract.setSalary(new BigDecimal("30000"));
         updatedContract.setHoursPerWeek(20);
-        updatedContract.setTerms("Updated employment terms.");
+        String currentTimeStamp = String.valueOf(LocalDateTime.now());
+        updatedContract.setTerms("Updated employment terms."+currentTimeStamp);
 
-        WebTarget target = client.target(BASE_URL + "/{id}").resolveTemplate("id", contractId);
-        Response response = target.request(MediaType.APPLICATION_JSON)
+        WebTarget updateTarget = client.target(BASE_URL + "/{id}").resolveTemplate("id", contractId);
+        Response updateResponse = updateTarget.request(MediaType.APPLICATION_JSON)
                 .put(Entity.entity(updatedContract, MediaType.APPLICATION_JSON));
 
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        ContractDto contractResponse = response.readEntity(ContractDto.class);
+        // Assert
+        assertEquals(Response.Status.OK.getStatusCode(), updateResponse.getStatus());
+        ContractDto contractResponse = updateResponse.readEntity(ContractDto.class);
         assertEquals(contractId, contractResponse.getId());
         assertEquals("Part-Time", contractResponse.getContractType());
+
+        // Restore the original state
+        Response restoreResponse = updateTarget.request(MediaType.APPLICATION_JSON)
+                .put(Entity.entity(originalContract, MediaType.APPLICATION_JSON));
+
+        assertEquals(Response.Status.OK.getStatusCode(), restoreResponse.getStatus(), "Failed to restore the original contract state.");
     }
 
     @Test

@@ -66,7 +66,7 @@ public class TeamControllerTest {
 
     @Test
     public void testUpdateTeam() {
-        int teamId = 1;
+        int teamId = 1; // Assuming this ID exists and is valid
 
         // Arrange
         WebTarget getTarget = client.target(BASE_URL + "/{id}").resolveTemplate("id", teamId);
@@ -75,8 +75,8 @@ public class TeamControllerTest {
         // Act
         TeamDto updatedTeam = new TeamDto();
         updatedTeam.setTeamName("Updated Dream Team");
-        updatedTeam.setDepartmentID(2);
-        updatedTeam.setTeamLeaderID(4);
+        updatedTeam.setDepartmentID(2); // Assuming a new valid department ID
+        updatedTeam.setTeamLeaderID(4); // Assuming a new valid team leader ID
 
         WebTarget updateTarget = client.target(BASE_URL + "/{id}").resolveTemplate("id", teamId);
         Response updateResponse = updateTarget.request(MediaType.APPLICATION_JSON)

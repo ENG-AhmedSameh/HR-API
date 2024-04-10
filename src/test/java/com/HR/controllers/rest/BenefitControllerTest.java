@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -66,18 +67,32 @@ public class BenefitControllerTest {
     @Test
     public void testUpdateBenefit() {
         int benefitId = 1; // Assuming this ID exists and is valid
+
+        // Arrange
+        WebTarget getTarget = client.target(BASE_URL + "/{id}").resolveTemplate("id", benefitId);
+        BenefitDto originalBenefit = getTarget.request(MediaType.APPLICATION_JSON).get(BenefitDto.class);
+
+        // Act
         BenefitDto updatedBenefit = new BenefitDto();
-        updatedBenefit.setBenefitName("Updated Health Insurance");
+        String currentTimeStamp = String.valueOf(LocalDateTime.now());
+        updatedBenefit.setBenefitName("Updated Health Insurance: "+ currentTimeStamp);
         updatedBenefit.setDescription("Updated comprehensive health insurance plan.");
 
-        WebTarget target = client.target(BASE_URL + "/{id}").resolveTemplate("id", benefitId);
-        Response response = target.request(MediaType.APPLICATION_JSON)
+        WebTarget updateTarget = client.target(BASE_URL + "/{id}").resolveTemplate("id", benefitId);
+        Response updateResponse = updateTarget.request(MediaType.APPLICATION_JSON)
                 .put(Entity.entity(updatedBenefit, MediaType.APPLICATION_JSON));
 
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        BenefitDto benefitResponse = response.readEntity(BenefitDto.class);
+        // Assert
+        assertEquals(Response.Status.OK.getStatusCode(), updateResponse.getStatus());
+        BenefitDto benefitResponse = updateResponse.readEntity(BenefitDto.class);
         assertEquals(benefitId, benefitResponse.getId());
-        assertEquals("Updated Health Insurance", benefitResponse.getBenefitName());
+        assertEquals("Updated Health Insurance: "+ currentTimeStamp, benefitResponse.getBenefitName());
+
+        // Restore the original state
+        Response restoreResponse = updateTarget.request(MediaType.APPLICATION_JSON)
+                .put(Entity.entity(originalBenefit, MediaType.APPLICATION_JSON));
+
+        assertEquals(Response.Status.OK.getStatusCode(), restoreResponse.getStatus(), "Failed to restore the original benefit state.");
     }
 
     @Test
