@@ -1,4 +1,4 @@
-package com.HR.configuration;
+package com.HR.util.exceptions;
 
 public class BusinessException extends RuntimeException {
 

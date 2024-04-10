@@ -2,6 +2,7 @@ package com.HR.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Value;
 
 import java.io.Serializable;
@@ -11,11 +12,11 @@ import java.time.LocalDate;
 /**
  * DTO for {@link com.HR.persistence.entities.Contract}
  */
-@Value
+@Data
 public class ContractDto implements Serializable {
     Integer id;
     @NotNull
-    EmployeeDto employee;
+    Integer employeeID;
     @NotNull
     @Size(max = 255)
     String contractType;

@@ -1,9 +1,8 @@
 package com.HR.dto;
 
-import com.HR.persistence.entities.Employee;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Value;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -11,11 +10,11 @@ import java.time.LocalDate;
 /**
  * DTO for {@link com.HR.persistence.entities.Vacation}
  */
-@Value
+@Data
 public class VacationDto implements Serializable {
     Integer id;
     @NotNull
-    EmployeeDto employee;
+    Integer employeeID;
     @NotNull
     LocalDate startDate;
     @NotNull

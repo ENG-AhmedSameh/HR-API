@@ -22,7 +22,12 @@ public abstract class RepoImpl<T> {
     }
 
     // findAll
-    public List<T> findAll(int page, int size){
+    public List<T> findAll(){
+        return entityManager.createQuery("from " + table.getName() + " u", table)
+                .getResultList();
+    }
+
+    public List<T> findAllWithPagination(int page, int size){
         return entityManager.createQuery("from " + table.getName() + " u", table)
                 .setFirstResult((page - 1) * size)
                 .setMaxResults(size)

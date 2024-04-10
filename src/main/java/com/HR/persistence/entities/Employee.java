@@ -31,10 +31,6 @@ public class Employee {
     private String lastName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DepartmentID")
-    private Department department;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DirectManagerID")
     @Nullable
     private Employee directManager;
@@ -79,4 +75,8 @@ public class Employee {
         employeeBenefit.setEmployee(this);
     }
 
+    public void removeEmployeeBenefit(EmployeeBenefit employeeBenefit) {
+        employeeBenefits.remove(employeeBenefit);
+        employeeBenefit.setEmployee(null);
+    }
 }

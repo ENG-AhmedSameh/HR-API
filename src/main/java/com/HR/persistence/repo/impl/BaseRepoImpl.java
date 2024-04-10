@@ -1,6 +1,6 @@
 package com.HR.persistence.repo.impl;
 
-import com.HR.configuration.BusinessException;
+import com.HR.util.exceptions.BusinessException;
 import com.HR.persistence.Database;
 import com.HR.persistence.repo.Repo;
 import jakarta.persistence.PersistenceException;

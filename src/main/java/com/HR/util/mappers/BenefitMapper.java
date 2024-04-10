@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
+import java.util.Set;
 
 @Mapper
 public interface BenefitMapper {
@@ -14,4 +15,7 @@ public interface BenefitMapper {
     BenefitDto toDto(Benefit benefit);
     List<BenefitDto> toDtoList(List<Benefit> benefits);
     List<Benefit> toEntityList(List<BenefitDto> benefitDtos);
+
+    Set<BenefitDto> toDtoSet(Set<Benefit> benefits);
+    Set<Benefit> toEntitySet(Set<BenefitDto> benefitDtos);
 }

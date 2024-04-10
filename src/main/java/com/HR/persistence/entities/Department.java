@@ -29,9 +29,6 @@ public class Department {
     private Employee manager;
 
     @OneToMany(mappedBy = "department")
-    private Set<Employee> employees = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "department")
     private Set<Team> teams = new LinkedHashSet<>();
 
 }

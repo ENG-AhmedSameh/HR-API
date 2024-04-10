@@ -1,7 +1,5 @@
 package com.HR.dto;
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -14,15 +12,13 @@ import java.io.Serializable;
 @Data
 public class EmployeeDto implements Serializable {
     Integer id;
-    @NotNull
     @Size(max = 255)
     String firstName;
-    @NotNull
     @Size(max = 255)
     String lastName;
-    Integer departmentID;
-    @Nullable
     Integer directManagerID;
+    String directManagerName;
     Integer teamID;
+    String teamName;
     Integer totalVacationDaysAllotted;
 }

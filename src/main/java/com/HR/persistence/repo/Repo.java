@@ -1,6 +1,6 @@
 package com.HR.persistence.repo;
 
-import com.HR.configuration.BusinessException;
+import com.HR.util.exceptions.BusinessException;
 
 import java.util.List;
 import java.util.Optional;
