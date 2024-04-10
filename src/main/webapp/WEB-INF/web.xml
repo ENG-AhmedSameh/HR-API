@@ -17,7 +17,18 @@
         <url-pattern>/webapi/*</url-pattern>
     </servlet-mapping>
 
-<!--    <listener>-->
-<!--        <listener-class>org.glassfish.jersey.server.ResourceConfig</listener-class>-->
-<!--    </listener>-->
+    <listener>
+        <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>Metro Web Application</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Metro Web Application</servlet-name>
+        <url-pattern>/soap/*</url-pattern>
+    </servlet-mapping>
 </web-app>

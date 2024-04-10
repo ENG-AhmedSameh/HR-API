@@ -5,9 +5,6 @@ import com.HR.persistence.entities.Benefit;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import java.util.List;
-import java.util.Set;
-
 @Mapper
 public interface BenefitMapper extends GenericMapper<BenefitDto, Benefit>{
     BenefitMapper INSTANCE = Mappers.getMapper(BenefitMapper.class);

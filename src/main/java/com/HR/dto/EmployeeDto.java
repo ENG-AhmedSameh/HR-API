@@ -1,6 +1,9 @@
 package com.HR.dto;
 
 import jakarta.validation.constraints.Size;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -10,6 +13,8 @@ import java.io.Serializable;
  */
 //@Value
 @Data
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class EmployeeDto implements Serializable {
     Integer id;
     @Size(max = 255)

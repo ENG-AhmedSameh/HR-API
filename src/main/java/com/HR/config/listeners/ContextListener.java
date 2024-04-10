@@ -1,11 +1,10 @@
 package com.HR.config.listeners;
 
 import com.HR.persistence.Database;
-import jakarta.servlet.annotation.WebListener;
-
 import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.annotation.WebListener;
 
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -27,7 +26,7 @@ public class ContextListener implements ServletContextListener{
             try {
                 DriverManager.deregisterDriver(driver);
             } catch (SQLException e) {
-                System.err.println("Error deregistering driver: "+ e);
+                System.err.println("Error unregistering driver: "+ e);
             }
         }
         AbandonedConnectionCleanupThread.uncheckedShutdown();

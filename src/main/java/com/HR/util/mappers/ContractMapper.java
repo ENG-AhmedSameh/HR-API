@@ -6,8 +6,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import java.util.Set;
-
 @Mapper
 public interface ContractMapper extends GenericMapper<ContractDto, Contract> {
     ContractMapper INSTANCE = Mappers.getMapper(ContractMapper.class);

@@ -1,9 +1,7 @@
 package com.HR.controllers.rest;
 
 import com.HR.dto.*;
-import com.HR.persistence.repo.EmployeeRepo;
 import com.HR.services.EmployeeService;
-import com.HR.util.mappers.EmployeeMapper;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -14,10 +12,15 @@ import java.util.Set;
 public class EmployeeController extends ResourceController<EmployeeDto, EmployeeService>{
     private final EmployeeService employeeService;
 
-    public EmployeeController(){
-        super(new EmployeeService(new EmployeeRepo(),EmployeeMapper.INSTANCE));
-        employeeService = new EmployeeService(new EmployeeRepo(),EmployeeMapper.INSTANCE);
+    public EmployeeController() {
+        this(new EmployeeService());
     }
+
+    private EmployeeController(EmployeeService employeeService) {
+        super(employeeService);
+        this.employeeService = employeeService;
+    }
+
 
     @GET
     @Path("{employeeId}/managedEmployees")

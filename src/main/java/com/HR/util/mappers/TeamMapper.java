@@ -7,8 +7,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
-import java.util.Set;
-
 @Mapper
 public interface TeamMapper extends GenericMapper<TeamDto, Team>{
     TeamMapper INSTANCE = Mappers.getMapper(TeamMapper.class);

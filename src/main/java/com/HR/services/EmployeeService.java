@@ -14,9 +14,13 @@ import java.util.stream.Collectors;
 
 public class EmployeeService extends GenericResourceService<EmployeeDto,Employee,EmployeeRepo> {
 
-    public EmployeeService(EmployeeRepo repo, GenericMapper<EmployeeDto, Employee> mapper) {
-        super(repo, mapper);
-    }
+        public EmployeeService() {
+            super(new EmployeeRepo(), EmployeeMapper.INSTANCE);
+        }
+
+//    public EmployeeService(EmployeeRepo repo, GenericMapper<EmployeeDto, Employee> mapper) {
+//        super(repo, mapper);
+//    }
 
 //    @Override
 //    public List<EmployeeDto> getAll(int page, int size) {
