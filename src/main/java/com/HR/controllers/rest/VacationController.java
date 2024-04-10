@@ -6,7 +6,7 @@ import jakarta.ws.rs.Path;
 
 @Path("vacations")
 public class VacationController extends ResourceController<VacationDto, VacationService>{
-    protected VacationController() {
+    public VacationController() {
         super(new VacationService());
     }
 }
